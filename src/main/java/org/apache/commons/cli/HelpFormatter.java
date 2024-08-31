@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -86,7 +87,7 @@ public class HelpFormatter {
         /**
          * Formatter for deprecated options.
          */
-        private Function<Option, String> deprecatedFormatFunc = DEFAULT_DEPRECATED_FORMAT;
+        private Function<Option, String> deprecatedFormatFunction = DEFAULT_DEPRECATED_FORMAT;
 
         /**
          * The output PrintWriter, defaults to wrapping {@link System#out}.
@@ -98,7 +99,7 @@ public class HelpFormatter {
 
         @Override
         public HelpFormatter get() {
-            return new HelpFormatter(deprecatedFormatFunc, printStream, showSince);
+            return new HelpFormatter(deprecatedFormatFunction, printStream, showSince);
         }
 
         /**
@@ -125,12 +126,12 @@ public class HelpFormatter {
         /**
          * Sets whether to show deprecated options.
          *
-         * @param showDeprecatedFunc Specify the format for the deprecated options.
+         * @param deprecatedFormatFunction Specify the format for the deprecated options.
          * @return {@code this} instance.
          * @since 1.8.0
          */
-        public Builder setShowDeprecated(final Function<Option, String> showDeprecatedFunc) {
-            this.deprecatedFormatFunc = showDeprecatedFunc;
+        public Builder setShowDeprecated(final Function<Option, String> deprecatedFormatFunction) {
+            this.deprecatedFormatFunction = deprecatedFormatFunction;
             return this;
         }
 
@@ -304,7 +305,7 @@ public class HelpFormatter {
     /**
      * Function to format the description for a deprecated option.
      */
-    private final Function<Option, String> deprecatedFormatFunc;
+    private final Function<Option, String> deprecatedFormatFunction;
 
     /**
      * Where to print help.
@@ -328,13 +329,13 @@ public class HelpFormatter {
 
     /**
      * Constructs a new instance.
-     * @param printStream TODO
+     * @param printWriter TODO
      */
-    private HelpFormatter(final Function<Option, String> deprecatedFormatFunc, final PrintWriter printStream, final boolean showSince) {
+    private HelpFormatter(final Function<Option, String> deprecatedFormatFunction, final PrintWriter printWriter, final boolean showSince) {
         // TODO All other instance HelpFormatter instance variables.
         // Make HelpFormatter immutable for 2.0
-        this.deprecatedFormatFunc = deprecatedFormatFunc;
-        this.printWriter = printStream;
+        this.deprecatedFormatFunction = deprecatedFormatFunction;
+        this.printWriter = printWriter;
         this.showSince = showSince;
     }
 
@@ -369,15 +370,14 @@ public class HelpFormatter {
      * Appends the usage clause for an OptionGroup to a StringBuffer. The clause is wrapped in square brackets if the group
      * is required. The display of the options is handled by appendOption
      *
-     * @param buff the StringBuffer to append to
+     * @param buff the StringBuilder to append to
      * @param group the group to append
-     * @see #appendOption(StringBuffer,Option,boolean)
+     * @see #appendOption(StringBuilder,Option,boolean)
      */
-    private void appendOptionGroup(final StringBuffer buff, final OptionGroup group) {
+    private void appendOptionGroup(final StringBuilder buff, final OptionGroup group) {
         if (!group.isRequired()) {
             buff.append("[");
         }
-
         final List<Option> optList = new ArrayList<>(group.getOptions());
         if (getOptionComparator() != null) {
             Collections.sort(optList, getOptionComparator());
@@ -391,9 +391,132 @@ public class HelpFormatter {
                 buff.append(" | ");
             }
         }
-
         if (!group.isRequired()) {
             buff.append("]");
+        }
+    }
+
+    /**
+     * Renders the specified Options and return the rendered Options in a StringBuffer.
+     *
+     * @param sb The StringBuffer to place the rendered Options into.
+     * @param width The number of characters to display per line
+     * @param options The command line Options
+     * @param leftPad the number of characters of padding to be prefixed to each line
+     * @param descPad the number of characters of padding to be prefixed to each description line
+     * @return the StringBuffer with the rendered Options contents.
+     * @throws IOException if an I/O error occurs.
+     */
+    <A extends Appendable> A appendOptions(final A sb, final int width, final Options options, final int leftPad, final int descPad) throws IOException {
+        final String lpad = createPadding(leftPad);
+        final String dpad = createPadding(descPad);
+        // first create list containing only <lpad>-a,--aaa where
+        // -a is opt and --aaa is long opt; in parallel look for
+        // the longest opt string this list will be then used to
+        // sort options ascending
+        int max = 0;
+        final int maxSince = showSince ? determineMaxSinceLength(options) + leftPad : 0;
+        final List<StringBuilder> prefixList = new ArrayList<>();
+        final List<Option> optList = options.helpOptions();
+        if (getOptionComparator() != null) {
+            Collections.sort(optList, getOptionComparator());
+        }
+        for (final Option option : optList) {
+            final StringBuilder optBuf = new StringBuilder();
+            if (option.getOpt() == null) {
+                optBuf.append(lpad).append("   ").append(getLongOptPrefix()).append(option.getLongOpt());
+            } else {
+                optBuf.append(lpad).append(getOptPrefix()).append(option.getOpt());
+                if (option.hasLongOpt()) {
+                    optBuf.append(',').append(getLongOptPrefix()).append(option.getLongOpt());
+                }
+            }
+            if (option.hasArg()) {
+                final String argName = option.getArgName();
+                if (argName != null && argName.isEmpty()) {
+                    // if the option has a blank argname
+                    optBuf.append(' ');
+                } else {
+                    optBuf.append(option.hasLongOpt() ? longOptSeparator : " ");
+                    optBuf.append("<").append(argName != null ? option.getArgName() : getArgName()).append(">");
+                }
+            }
+
+            prefixList.add(optBuf);
+            max = Math.max(optBuf.length() + maxSince, max);
+        }
+        final int nextLineTabStop = max + descPad;
+        if (showSince) {
+            final StringBuilder optHeader = new StringBuilder(HEADER_OPTIONS).append(createPadding(max - maxSince - HEADER_OPTIONS.length() + leftPad))
+                    .append(HEADER_SINCE);
+            optHeader.append(createPadding(max - optHeader.length())).append(lpad).append(HEADER_DESCRIPTION);
+            appendWrappedText(sb, width, nextLineTabStop, optHeader.toString());
+            sb.append(getNewLine());
+        }
+
+        int x = 0;
+        for (final Iterator<Option> it = optList.iterator(); it.hasNext();) {
+            final Option option = it.next();
+            final StringBuilder optBuf = new StringBuilder(prefixList.get(x++).toString());
+            if (optBuf.length() < max) {
+                optBuf.append(createPadding(max - maxSince - optBuf.length()));
+                if (showSince) {
+                    optBuf.append(lpad).append(option.getSince() == null ? "-" : option.getSince());
+                }
+                optBuf.append(createPadding(max - optBuf.length()));
+            }
+            optBuf.append(dpad);
+
+            if (deprecatedFormatFunction != null && option.isDeprecated()) {
+                optBuf.append(deprecatedFormatFunction.apply(option).trim());
+            } else if (option.getDescription() != null) {
+                optBuf.append(option.getDescription());
+            }
+            appendWrappedText(sb, width, nextLineTabStop, optBuf.toString());
+            if (it.hasNext()) {
+                sb.append(getNewLine());
+            }
+        }
+        return sb;
+    }
+
+    /**
+     * Renders the specified text and return the rendered Options in a StringBuffer.
+     *
+     * @param <A> The Appendable implementation.
+     * @param appendable The StringBuffer to place the rendered text into.
+     * @param width The number of characters to display per line
+     * @param nextLineTabStop The position on the next line for the first tab.
+     * @param text The text to be rendered.
+     * @return the StringBuffer with the rendered Options contents.
+     * @throws IOException if an I/O error occurs.
+     */
+    <A extends Appendable> A appendWrappedText(final A appendable, final int width, final int nextLineTabStop, final String text) throws IOException {
+        String render = text;
+        int nextLineTabStopPos = nextLineTabStop;
+        int pos = findWrapPos(render, width, 0);
+        if (pos == -1) {
+            appendable.append(rtrim(render));
+            return appendable;
+        }
+        appendable.append(rtrim(render.substring(0, pos))).append(getNewLine());
+        if (nextLineTabStopPos >= width) {
+            // stops infinite loop happening
+            nextLineTabStopPos = 1;
+        }
+        // all following lines must be padded with nextLineTabStop space characters
+        final String padding = createPadding(nextLineTabStopPos);
+        while (true) {
+            render = padding + render.substring(pos).trim();
+            pos = findWrapPos(render, width, 0);
+            if (pos == -1) {
+                appendable.append(render);
+                return appendable;
+            }
+            if (render.length() > width && pos == nextLineTabStopPos - 1) {
+                pos = width;
+            }
+            appendable.append(rtrim(render.substring(0, pos))).append(getNewLine());
         }
     }
 
@@ -408,6 +531,12 @@ public class HelpFormatter {
         final char[] padding = new char[len];
         Arrays.fill(padding, ' ');
         return new String(padding);
+    }
+
+    private int determineMaxSinceLength(final Options options) {
+        final int minLen = HEADER_SINCE.length();
+        final int len = options.getOptions().stream().map(o -> o.getSince() == null ? minLen : o.getSince().length()).max(Integer::compareTo).orElse(minLen);
+        return len < minLen ? minLen : len;
     }
 
     /**
@@ -446,7 +575,6 @@ public class HelpFormatter {
         }
         // if we didn't find one, simply chop at startPos+width
         pos = startPos + width;
-
         return pos == text.length() ? -1 : pos;
     }
 
@@ -688,9 +816,12 @@ public class HelpFormatter {
      * @param descPad the number of characters of padding to be prefixed to each description line
      */
     public void printOptions(final PrintWriter pw, final int width, final Options options, final int leftPad, final int descPad) {
-        final StringBuffer sb = new StringBuffer();
-        renderOptions(sb, width, options, leftPad, descPad);
-        pw.println(sb.toString());
+        try {
+            pw.println(appendOptions(new StringBuilder(), width, options, leftPad, descPad));
+        } catch (final IOException e) {
+            // Cannot happen
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**
@@ -715,7 +846,7 @@ public class HelpFormatter {
      */
     public void printUsage(final PrintWriter pw, final int width, final String app, final Options options) {
         // initialize the string buffer
-        final StringBuffer buff = new StringBuffer(getSyntaxPrefix()).append(app).append(Char.SP);
+        final StringBuilder buff = new StringBuilder(getSyntaxPrefix()).append(app).append(Char.SP);
         // create a list for processed option groups
         final Collection<OptionGroup> processedGroups = new ArrayList<>();
         final List<Option> optList = new ArrayList<>(options.getOptions());
@@ -762,9 +893,7 @@ public class HelpFormatter {
      * @param text The text to be written to the PrintWriter
      */
     public void printWrapped(final PrintWriter pw, final int width, final int nextLineTabStop, final String text) {
-        final StringBuffer sb = new StringBuffer(text.length());
-        renderWrappedTextBlock(sb, width, nextLineTabStop, text);
-        pw.println(sb.toString());
+        pw.println(renderWrappedTextBlock(new StringBuilder(text.length()), width, nextLineTabStop, text));
     }
 
     /**
@@ -776,12 +905,6 @@ public class HelpFormatter {
      */
     public void printWrapped(final PrintWriter pw, final int width, final String text) {
         printWrapped(pw, width, 0, text);
-    }
-
-    private int determineMaxSinceLength(final Options options) {
-        int minLen = HEADER_SINCE.length();
-        int len = options.getOptions().stream().map(o -> o.getSince() == null ? minLen : o.getSince().length()).max(Integer::compareTo).orElse(minLen);
-        return len < minLen ? minLen : len;
     }
 
     /**
@@ -809,63 +932,6 @@ public class HelpFormatter {
         if (getOptionComparator() != null) {
             Collections.sort(optList, getOptionComparator());
         }
-        for (final Option option : optList) {
-            final StringBuffer optBuf = new StringBuffer();
-            if (option.getOpt() == null) {
-                optBuf.append(lpad).append("   ").append(getLongOptPrefix()).append(option.getLongOpt());
-            } else {
-                optBuf.append(lpad).append(getOptPrefix()).append(option.getOpt());
-                if (option.hasLongOpt()) {
-                    optBuf.append(',').append(getLongOptPrefix()).append(option.getLongOpt());
-                }
-            }
-            if (option.hasArg()) {
-                final String argName = option.getArgName();
-                if (argName != null && argName.isEmpty()) {
-                    // if the option has a blank argname
-                    optBuf.append(' ');
-                } else {
-                    optBuf.append(option.hasLongOpt() ? longOptSeparator : " ");
-                    optBuf.append("<").append(argName != null ? option.getArgName() : getArgName()).append(">");
-                }
-            }
-
-            prefixList.add(optBuf);
-            max = Math.max(optBuf.length() + maxSince, max);
-        }
-        final int nextLineTabStop = max + descPad;
-        if (showSince) {
-            StringBuilder optHeader = new StringBuilder(HEADER_OPTIONS).append(createPadding(max - maxSince - HEADER_OPTIONS.length() + leftPad))
-                    .append(HEADER_SINCE);
-            optHeader.append(createPadding(max - optHeader.length())).append(lpad).append(HEADER_DESCRIPTION);
-            renderWrappedText(sb, width, nextLineTabStop, optHeader.toString());
-            sb.append(getNewLine());
-        }
-
-        int x = 0;
-        for (final Iterator<Option> it = optList.iterator(); it.hasNext();) {
-            final Option option = it.next();
-            final StringBuilder optBuf = new StringBuilder(prefixList.get(x++).toString());
-            if (optBuf.length() < max) {
-                optBuf.append(createPadding(max - maxSince - optBuf.length()));
-                if (showSince) {
-                    optBuf.append(lpad).append(option.getSince() == null ? "-" : option.getSince());
-                }
-                optBuf.append(createPadding(max - optBuf.length()));
-            }
-            optBuf.append(dpad);
-
-            if (deprecatedFormatFunc != null && option.isDeprecated()) {
-                optBuf.append(deprecatedFormatFunc.apply(option).trim());
-            } else if (option.getDescription() != null) {
-                optBuf.append(option.getDescription());
-            }
-            renderWrappedText(sb, width, nextLineTabStop, optBuf.toString());
-            if (it.hasNext()) {
-                sb.append(getNewLine());
-            }
-        }
-        return sb;
     }
 
     /**
@@ -879,31 +945,11 @@ public class HelpFormatter {
      * @return the StringBuffer with the rendered Options contents.
      */
     protected StringBuffer renderWrappedText(final StringBuffer sb, final int width, final int nextLineTabStop, final String text) {
-        String render = text;
-        int nextLineTabStopPos = nextLineTabStop;
-        int pos = findWrapPos(render, width, 0);
-        if (pos == -1) {
-            sb.append(rtrim(render));
-            return sb;
-        }
-        sb.append(rtrim(render.substring(0, pos))).append(getNewLine());
-        if (nextLineTabStopPos >= width) {
-            // stops infinite loop happening
-            nextLineTabStopPos = 1;
-        }
-        // all following lines must be padded with nextLineTabStop space characters
-        final String padding = createPadding(nextLineTabStopPos);
-        while (true) {
-            render = padding + render.substring(pos).trim();
-            pos = findWrapPos(render, width, 0);
-            if (pos == -1) {
-                sb.append(render);
-                return sb;
-            }
-            if (render.length() > width && pos == nextLineTabStopPos - 1) {
-                pos = width;
-            }
-            sb.append(rtrim(render.substring(0, pos))).append(getNewLine());
+        try {
+            return appendWrappedText(sb, width, nextLineTabStop, text);
+        } catch (final IOException e) {
+            // Cannot happen.
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -911,28 +957,28 @@ public class HelpFormatter {
      * Renders the specified text width a maximum width. This method differs from renderWrappedText by not removing leading
      * spaces after a new line.
      *
-     * @param sb The StringBuffer to place the rendered text into.
+     * @param appendable The StringBuffer to place the rendered text into.
      * @param width The number of characters to display per line
      * @param nextLineTabStop The position on the next line for the first tab.
      * @param text The text to be rendered.
      */
-    private Appendable renderWrappedTextBlock(final StringBuffer sb, final int width, final int nextLineTabStop, final String text) {
+    private <A extends Appendable> A renderWrappedTextBlock(final A appendable, final int width, final int nextLineTabStop, final String text) {
         try {
             final BufferedReader in = new BufferedReader(new StringReader(text));
             String line;
             boolean firstLine = true;
             while ((line = in.readLine()) != null) {
                 if (!firstLine) {
-                    sb.append(getNewLine());
+                    appendable.append(getNewLine());
                 } else {
                     firstLine = false;
                 }
-                renderWrappedText(sb, width, nextLineTabStop, line);
+                appendWrappedText(appendable, width, nextLineTabStop, line);
             }
         } catch (final IOException e) { // NOPMD
             // cannot happen
         }
-        return sb;
+        return appendable;
     }
 
     /**
