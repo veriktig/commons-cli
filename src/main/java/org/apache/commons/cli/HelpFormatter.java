@@ -346,7 +346,7 @@ public class HelpFormatter {
      * @param option the Option to append
      * @param required whether the Option is required or not
      */
-    public void appendOption(final StringBuffer buff, final Option option, final boolean required) {
+    public void appendOption(final StringBuilder buff, final Option option, final boolean required) {
         if (!required) {
             buff.append("[");
         }
@@ -919,18 +919,11 @@ public class HelpFormatter {
      * @return the StringBuffer with the rendered Options contents.
      */
     public StringBuffer renderOptions(final StringBuffer sb, final int width, final Options options, final int leftPad, final int descPad) {
-        final String lpad = createPadding(leftPad);
-        final String dpad = createPadding(descPad);
-        // first create list containing only <lpad>-a,--aaa where
-        // -a is opt and --aaa is long opt; in parallel look for
-        // the longest opt string this list will be then used to
-        // sort options ascending
-        int max = 0;
-        int maxSince = showSince ? determineMaxSinceLength(options) + leftPad : 0;
-        final List<StringBuffer> prefixList = new ArrayList<>();
-        final List<Option> optList = options.helpOptions();
-        if (getOptionComparator() != null) {
-            Collections.sort(optList, getOptionComparator());
+        try {
+            return appendOptions(sb, width, options, leftPad, descPad);
+        } catch (final IOException e) {
+            // Cannot happen
+            throw new UncheckedIOException(e);
         }
     }
 
