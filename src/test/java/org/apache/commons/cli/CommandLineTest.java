@@ -218,12 +218,28 @@ public class CommandLineTest {
     }
 
     @Test
-    public void testBuilder() {
-        final CommandLine.Builder builder = new CommandLine.Builder();
-        builder.addArg("foo").addArg("bar");
-        builder.addOption(Option.builder("T").build());
-        final CommandLine cmd = builder.build();
+    public void testBuilderBuild() {
+        // @formatter:off
+        final CommandLine cmd = CommandLine.builder()
+                .addArg("foo")
+                .addArg("bar")
+                .addOption(Option.builder("T").build())
+                .build();
+        // @formatter:on
+        assertEquals("foo", cmd.getArgs()[0]);
+        assertEquals("bar", cmd.getArgList().get(1));
+        assertEquals("T", cmd.getOptions()[0].getOpt());
+    }
 
+    @Test
+    public void testBuilderGet() {
+        // @formatter:off
+        final CommandLine cmd = CommandLine.builder()
+                .addArg("foo")
+                .addArg("bar")
+                .addOption(Option.builder("T").build())
+                .get();
+        // @formatter:on
         assertEquals("foo", cmd.getArgs()[0]);
         assertEquals("bar", cmd.getArgList().get(1));
         assertEquals("T", cmd.getOptions()[0].getOpt());
@@ -231,7 +247,7 @@ public class CommandLineTest {
 
     @Test
     public void testBuilderNullArgs() {
-        final CommandLine.Builder builder = new CommandLine.Builder();
+        final CommandLine.Builder builder = CommandLine.builder();
         builder.addArg(null).addArg(null);
         builder.addOption(Option.builder("T").build());
         final CommandLine cmd = builder.build();
@@ -242,7 +258,7 @@ public class CommandLineTest {
 
     @Test
     public void testBuilderNullOption() {
-        final CommandLine.Builder builder = new CommandLine.Builder();
+        final CommandLine.Builder builder = CommandLine.builder();
         builder.addArg("foo").addArg("bar");
         builder.addOption(null);
         builder.addOption(null);
@@ -348,7 +364,7 @@ public class CommandLineTest {
                                    final String optValue, final boolean grpDep, final String grpValue, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final List<Option> handler = new ArrayList<>();
-        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).get().parse(options, args);
         final Supplier<String> thinger = () -> "thing";
         final OptionGroup otherGroup = new OptionGroup().addOption(Option.builder("o").longOpt("other").hasArg().build())
                 .addOption(Option.builder().option("p").longOpt("part").hasArg().build());
@@ -454,7 +470,7 @@ public class CommandLineTest {
                                     final String[] optValue, final boolean grpDep, final String[] grpValue, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final List<Option> handler = new ArrayList<>();
-        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).get().parse(options, args);
         final OptionGroup otherGroup = new OptionGroup().addOption(Option.builder("o").longOpt("other").hasArg().build())
                 .addOption(Option.builder().option("p").longOpt("part").hasArg().build());
         final OptionGroup nullGroup = null;
@@ -499,7 +515,7 @@ public class CommandLineTest {
                                          final Integer optValue, final boolean grpDep, final Integer grpValue, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final List<Option> handler = new ArrayList<>();
-        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).get().parse(options, args);
         final Supplier<Integer> thinger = () -> 2;
         final OptionGroup otherGroup = new OptionGroup().addOption(Option.builder("o").longOpt("other").hasArg().build())
                 .addOption(Option.builder().option("p").longOpt("part").hasArg().build());
@@ -607,7 +623,7 @@ public class CommandLineTest {
                               final boolean has, final boolean grpDep, final boolean hasGrp, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final List<Option> handler = new ArrayList<>();
-        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(handler::add).get().parse(options, args);
         final OptionGroup otherGroup = new OptionGroup().addOption(Option.builder("o").longOpt("other").hasArg().build())
                 .addOption(Option.builder().option("p").longOpt("part").hasArg().build());
         final OptionGroup nullGroup = null;
@@ -664,7 +680,7 @@ public class CommandLineTest {
                               final boolean has, final boolean grpDep, final boolean hasGrp, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final CommandLine commandLine = DefaultParser.builder().build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().get().parse(options, args);
         final PrintStream ps = System.out;
         try {
             System.setOut(new PrintStream(baos));
@@ -716,7 +732,7 @@ public class CommandLineTest {
                                                   final boolean has, final boolean grpDep, final boolean hasGrp, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(null).build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().setDeprecatedHandler(null).get().parse(options, args);
         final PrintStream ps = System.out;
         try {
             System.setOut(new PrintStream(baos));
@@ -755,7 +771,7 @@ public class CommandLineTest {
     public void testNoDeprecationHandler(final String[] args, final Option opt, final OptionGroup optionGroup, final boolean optDep,
                                    final String optValue, final boolean grpDep, final String grpValue, final Option grpOpt) throws ParseException {
         final Options options = new Options().addOptionGroup(optionGroup);
-        final CommandLine commandLine = DefaultParser.builder().build().parse(options, args);
+        final CommandLine commandLine = DefaultParser.builder().get().parse(options, args);
         final Supplier<String> thinger = () -> "thing";
         final Supplier<String> nullSupplier = null;
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

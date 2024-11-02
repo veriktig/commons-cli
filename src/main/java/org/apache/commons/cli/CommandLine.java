@@ -47,7 +47,7 @@ public class CommandLine implements Serializable {
      *
      * @since 1.4
      */
-    public static final class Builder {
+    public static final class Builder implements Supplier<CommandLine> {
 
         /**
          * Prints an Option to {@link System#out}.
@@ -64,6 +64,16 @@ public class CommandLine implements Serializable {
          * Deprecated Option handler.
          */
         private Consumer<Option> deprecatedHandler = DEPRECATED_HANDLER;
+
+        /**
+         * Constructs a new instance.
+         *
+         * @deprecated Use {@link #builder()}.
+         */
+        @Deprecated
+        public Builder() {
+            // empty
+        }
 
         /**
          * Adds left-over unrecognized option/argument.
@@ -94,11 +104,24 @@ public class CommandLine implements Serializable {
         }
 
         /**
-         * Creates the new instance.
+         * Creates a new instance.
          *
-         * @return the new instance.
+         * @return a new instance.
+         * @deprecated Use {@link #get()}.
          */
+        @Deprecated
         public CommandLine build() {
+            return get();
+        }
+
+        /**
+         * Creates a new instance.
+         *
+         * @return a new instance.
+         * @since 1.10.0
+         */
+        @Override
+        public CommandLine get() {
             return new CommandLine(args, options, deprecatedHandler);
         }
 
