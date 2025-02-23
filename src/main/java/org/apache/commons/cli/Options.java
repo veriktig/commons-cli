@@ -42,6 +42,14 @@ import java.util.Map;
  * @see org.apache.commons.cli.CommandLine
  */
 public class Options implements Serializable {
+
+    /**
+     * Constructs new instance.
+     */
+    public Options() {
+        // empty
+    }
+
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 

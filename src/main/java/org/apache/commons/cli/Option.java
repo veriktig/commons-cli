@@ -448,7 +448,6 @@ public class Option implements Cloneable, Serializable {
      * @param option      short representation of the option.
      * @param hasArg      specifies whether the Option takes an argument or not.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final boolean hasArg, final String description) throws IllegalArgumentException {
@@ -460,7 +459,6 @@ public class Option implements Cloneable, Serializable {
      *
      * @param option      short representation of the option.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final String description) throws IllegalArgumentException {
@@ -474,7 +472,6 @@ public class Option implements Cloneable, Serializable {
      * @param longOption  the long representation of the option.
      * @param hasArg      specifies whether the Option takes an argument or not.
      * @param description describes the function of the option.
-     *
      * @throws IllegalArgumentException if there are any non valid Option characters in {@code opt}.
      */
     public Option(final String option, final String longOption, final boolean hasArg, final String description) throws IllegalArgumentException {
@@ -671,7 +668,6 @@ public class Option implements Cloneable, Serializable {
         return since;
     }
 
-
     /**
      * Gets the type of this Option.
      *
@@ -694,9 +690,7 @@ public class Option implements Cloneable, Serializable {
      * Gets the specified value of this Option or {@code null} if there is no value.
      *
      * @param index The index of the value to be returned.
-     *
      * @return the specified value of this Option or {@code null} if there is no value.
-     *
      * @throws IndexOutOfBoundsException if index is less than 1 or greater than the number of the values for this Option.
      */
     public String getValue(final int index) throws IndexOutOfBoundsException {
@@ -707,7 +701,6 @@ public class Option implements Cloneable, Serializable {
      * Gets the value/first value of this Option or the {@code defaultValue} if there is no value.
      *
      * @param defaultValue The value to be returned if there is no value.
-     *
      * @return the value/first value of this Option or the {@code defaultValue} if there are no values.
      */
     public String getValue(final String defaultValue) {
@@ -716,9 +709,9 @@ public class Option implements Cloneable, Serializable {
     }
 
     /**
-     * Gets the values of this Option as a String array or null if there are no values.
+     * Gets the values of this Option as a String array or an empty array if there are no values.
      *
-     * @return the values of this Option as a String array or null if there are no values.
+     * @return the values of this Option as a String array or an empty array if there are no values.
      */
     public String[] getValues() {
         return hasNoValues() ? null : values.toArray(EMPTY_STRING_ARRAY);
@@ -734,9 +727,9 @@ public class Option implements Cloneable, Serializable {
     }
 
     /**
-     * Gets the values of this Option as a List or null if there are no values.
+     * Gets the values of this Option as a List.  Will return an empty list if there are no values.
      *
-     * @return the values of this Option as a List or null if there are no values.
+     * @return the values of this Option as a List or an empty List if there are no values.
      */
     public List<String> getValuesList() {
         return values;

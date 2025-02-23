@@ -82,6 +82,13 @@ public class HelpFormatter {
         // Make HelpFormatter immutable for 2.0
 
         /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
+
+        /**
          * A function to convert a description (not null) and a deprecated Option (not null) to help description
          */
         private static final Function<Option, String> DEFAULT_DEPRECATED_FORMAT = o -> "[Deprecated] " + getDescription(o);
@@ -171,6 +178,7 @@ public class HelpFormatter {
             return opt1.getKey().compareToIgnoreCase(opt2.getKey());
         }
     }
+
     /** "Options" text for options header */
     private static final String HEADER_OPTIONS = "Options";
 
@@ -526,7 +534,6 @@ public class HelpFormatter {
      * Creates a String of padding of length {@code len}.
      *
      * @param len The length of the String of padding to create.
-     *
      * @return The String of padding
      */
     protected String createPadding(final int len) {
@@ -716,7 +723,6 @@ public class HelpFormatter {
      * @param leftPad the number of characters of padding to be prefixed to each line
      * @param descPad the number of characters of padding to be prefixed to each description line
      * @param footer the banner to display at the end of the help
-     *
      * @throws IllegalStateException if there is no room to print a line
      */
     public void printHelp(final PrintWriter pw, final int width, final String cmdLineSyntax, final String header, final Options options, final int leftPad,
@@ -917,7 +923,6 @@ public class HelpFormatter {
      * @param options The command line Options
      * @param leftPad the number of characters of padding to be prefixed to each line
      * @param descPad the number of characters of padding to be prefixed to each description line
-     *
      * @return the StringBuffer with the rendered Options contents.
      */
     public StringBuffer renderOptions(final StringBuffer sb, final int width, final Options options, final int leftPad, final int descPad) {
@@ -936,7 +941,6 @@ public class HelpFormatter {
      * @param width The number of characters to display per line
      * @param nextLineTabStop The position on the next line for the first tab.
      * @param text The text to be rendered.
-     *
      * @return the StringBuffer with the rendered Options contents.
      */
     protected StringBuffer renderWrappedText(final StringBuffer sb, final int width, final int nextLineTabStop, final String text) {
