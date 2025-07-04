@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,19 +36,12 @@ import java.util.Map;
  * </p>
  * <p>
  * It may flexibly parse long and short options, with or without values. Additionally, it may parse only a portion of a
- * commandline, allowing for flexible multi-stage parsing.
+ * command-line, allowing for flexible multi-stage parsing.
  * </p>
  *
  * @see org.apache.commons.cli.CommandLine
  */
 public class Options implements Serializable {
-
-    /**
-     * Constructs new instance.
-     */
-    public Options() {
-        // empty
-    }
 
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
@@ -60,12 +53,19 @@ public class Options implements Serializable {
     private final Map<String, Option> longOpts = new LinkedHashMap<>();
 
     /** A map of the required options */
-    // N.B. This can contain either a String (addOption) or an OptionGroup (addOptionGroup)
+    // This can contain either a String (addOption) or an OptionGroup (addOptionGroup)
     // TODO this seems wrong
     private final List<Object> requiredOpts = new ArrayList<>();
 
     /** A map of the option groups */
     private final Map<String, OptionGroup> optionGroups = new LinkedHashMap<>();
+
+    /**
+     * Constructs new instance.
+     */
+    public Options() {
+        // empty
+    }
 
     /**
      * Adds an option instance

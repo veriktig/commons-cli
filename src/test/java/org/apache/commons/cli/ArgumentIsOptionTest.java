@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class ArgumentIsOptionTest {
+class ArgumentIsOptionTest {
 
     private Options options;
     private CommandLineParser parser;
@@ -37,7 +37,7 @@ public class ArgumentIsOptionTest {
     }
 
     @Test
-    public void testOption() throws Exception {
+    void testOption() throws Exception {
         final String[] args = {"-p"};
 
         final CommandLine cl = parser.parse(options, args);
@@ -47,7 +47,7 @@ public class ArgumentIsOptionTest {
     }
 
     @Test
-    public void testOptionAndOptionWithArgument() throws Exception {
+    void testOptionAndOptionWithArgument() throws Exception {
         final String[] args = {"-p", "-attr", "p"};
 
         final CommandLine cl = parser.parse(options, args);
@@ -58,7 +58,7 @@ public class ArgumentIsOptionTest {
     }
 
     @Test
-    public void testOptionWithArgument() throws Exception {
+    void testOptionWithArgument() throws Exception {
         final String[] args = {"-attr", "p"};
 
         final CommandLine cl = parser.parse(options, args);

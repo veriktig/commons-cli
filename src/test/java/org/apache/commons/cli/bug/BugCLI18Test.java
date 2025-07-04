@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,9 +28,9 @@ import org.junit.jupiter.api.Test;
 /**
  * https://issues.apache.org/jira/browse/CLI-18
  */
-public class BugCLI18Test {
+class BugCLI18Test {
     @Test
-    public void testCLI18() {
+    void testCLI18() {
         final Options options = new Options();
         options.addOption(new Option("a", "aaa", false, "aaaaaaa"));
         options.addOption(new Option(null, "bbb", false, "bbbbbbb dksh fkshd fkhs dkfhsdk fhskd hksdks dhfowehfsdhfkjshf skfhkshf sf jkshfk sfh skfh skf f"));

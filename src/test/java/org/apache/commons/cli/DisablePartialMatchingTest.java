@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,9 +22,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class DisablePartialMatchingTest {
+class DisablePartialMatchingTest {
     @Test
-    public void testDisablePartialMatching() throws Exception {
+    void testDisablePartialMatching() throws Exception {
         final CommandLineParser parser = new DefaultParser(false);
 
         final Options options = new Options();
@@ -41,7 +41,7 @@ public class DisablePartialMatchingTest {
     }
 
     @Test
-    public void testRegularPartialMatching() throws Exception {
+    void testRegularPartialMatching() throws Exception {
         final CommandLineParser parser = new DefaultParser();
 
         final Options options = new Options();

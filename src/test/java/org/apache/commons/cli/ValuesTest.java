@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class ValuesTest {
+class ValuesTest {
     private CommandLine cmd;
 
     @BeforeEach
@@ -73,7 +73,7 @@ public class ValuesTest {
     }
 
     @Test
-    public void testCharSeparator() {
+    void testCharSeparator() {
         // tests the char methods of CommandLine that delegate to the String methods
         assertTrue(cmd.hasOption("j"), "Option j is not set");
         assertTrue(cmd.hasOption('j'), "Option j is not set");
@@ -92,25 +92,25 @@ public class ValuesTest {
     }
 
     @Test
-    public void testComplexValues() {
+    void testComplexValues() {
         assertTrue(cmd.hasOption("i"), "Option i is not set");
         assertTrue(cmd.hasOption("h"), "Option h is not set");
         assertArrayEquals(new String[] {"val1", "val2"}, cmd.getOptionValues("h"));
     }
 
     @Test
-    public void testExtraArgs() {
+    void testExtraArgs() {
         assertArrayEquals(new String[] {"arg1", "arg2", "arg3"}, cmd.getArgs(), "Extra args");
     }
 
     @Test
-    public void testMultipleArgValues() {
+    void testMultipleArgValues() {
         assertTrue(cmd.hasOption("e"), "Option e is not set");
         assertArrayEquals(new String[] {"one", "two"}, cmd.getOptionValues("e"));
     }
 
     @Test
-    public void testShortArgs() {
+    void testShortArgs() {
         assertTrue(cmd.hasOption("a"), "Option a is not set");
         assertTrue(cmd.hasOption("c"), "Option c is not set");
 
@@ -119,7 +119,7 @@ public class ValuesTest {
     }
 
     @Test
-    public void testShortArgsWithValue() {
+    void testShortArgsWithValue() {
         assertTrue(cmd.hasOption("b"), "Option b is not set");
         assertEquals("foo", cmd.getOptionValue("b"));
         assertEquals(1, cmd.getOptionValues("b").length);
@@ -130,7 +130,7 @@ public class ValuesTest {
     }
 
     @Test
-    public void testTwoArgValues() {
+    void testTwoArgValues() {
         assertTrue(cmd.hasOption("g"), "Option g is not set");
         assertArrayEquals(new String[] {"val1", "val2"}, cmd.getOptionValues("g"));
     }
@@ -140,7 +140,7 @@ public class ValuesTest {
      * in case I get a brainwave on how to resolve this.
      */
     /*
-     * public void testGetValue() { // the 'm' option assertTrue(_option.getValues().length == 2); assertEquals(
+     * void testGetValue() { // the 'm' option assertTrue(_option.getValues().length == 2); assertEquals(
      * _option.getValue(), "key"); assertEquals(_option.getValue(0), "key"); assertEquals(_option.getValue(1),
      * "value");
      *

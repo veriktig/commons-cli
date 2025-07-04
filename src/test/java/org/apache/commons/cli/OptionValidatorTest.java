@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class OptionValidatorTest {
+class OptionValidatorTest {
 
     /*
      * Exemplars of various types of characters
@@ -160,7 +160,7 @@ public class OptionValidatorTest {
     }
 
     @Test
-    public void testExclusivity() {
+    void testExclusivity() {
         /* since we modify acceptable chars by add and removing ADDITIONAL* chars we must verify that they do not exist in the
          * base javaIdentiferPart that is used in OptionValidator to validate basic characters  */
         for (final char c : OptionValidator.ADDITIONAL_LONG_CHARS) {
@@ -173,7 +173,7 @@ public class OptionValidatorTest {
 
     @ParameterizedTest(name = "{2}")
     @MethodSource("optionParameters")
-    public void testValidate(final String str, final boolean expected, final String name) {
+    void testValidate(final String str, final boolean expected, final String name) {
         if (expected) {
             assertEquals(str, OptionValidator.validate(str));
         } else {

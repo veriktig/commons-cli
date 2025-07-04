@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -159,8 +159,8 @@ public final class OptionFormatter {
          * Sets the separator displayed between a options and the argument name. Typically ' ' or '='.
          *
          * @param optArgSeparator the separator.
-         * @since 1.3
          * @return this
+         * @since 1.3
          */
         public Builder setOptArgSeparator(final String optArgSeparator) {
             this.optArgSeparator = Util.defaultValue(optArgSeparator, "");
@@ -195,8 +195,8 @@ public final class OptionFormatter {
          * Sets the separator displayed between a long option and short options. Typically ',' or ' '.
          *
          * @param optSeparator the separator.
-         * @since 1.3
          * @return this
+         * @since 1.3
          */
         public Builder setOptSeparator(final String optSeparator) {
             this.optSeparator = Util.defaultValue(optSeparator, "");

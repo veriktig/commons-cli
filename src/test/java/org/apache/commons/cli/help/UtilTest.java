@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class UtilTest {
+class UtilTest {
 
     public static Stream<Arguments> charArgs() {
         final List<Arguments> lst = new ArrayList<>();
@@ -58,14 +58,14 @@ public class UtilTest {
     }
 
     @Test
-    public void testFindNonWhitespacePos() {
+    void testFindNonWhitespacePos() {
         assertEquals(-1, Util.indexOfNonWhitespace(null, 0));
         assertEquals(-1, Util.indexOfNonWhitespace("", 0));
     }
 
     @ParameterizedTest
     @MethodSource("charArgs")
-    public void testFindNonWhitespacePos(final Character c, final boolean isWhitespace) {
+    void testFindNonWhitespacePos(final Character c, final boolean isWhitespace) {
         String text = String.format("%cWorld", c);
         assertEquals(isWhitespace ? 1 : 0, Util.indexOfNonWhitespace(text, 0));
         text = String.format("%c%c%c", c, c, c);
@@ -73,7 +73,7 @@ public class UtilTest {
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         String str = null;
         assertTrue(Util.isEmpty(str), "null string should be empty");
         str = "";
@@ -84,7 +84,7 @@ public class UtilTest {
 
     @ParameterizedTest
     @MethodSource("charArgs")
-    public void testRtrim(final Character c, final boolean isWhitespace) {
+    void testRtrim(final Character c, final boolean isWhitespace) {
         if (isWhitespace) {
             assertEquals("worx", Util.rtrim(String.format("worx%s", c)), () -> String.format("Did not process character 0x%x", (int) c));
         } else {

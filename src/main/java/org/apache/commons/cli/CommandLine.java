@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -765,12 +765,12 @@ public class CommandLine implements Serializable {
         if (option == null) {
             return get(defaultValue);
         }
-        Class<? extends T> clazz = (Class<? extends T>) option.getType();
-        String[] values = getOptionValues(option);
+        final Class<? extends T> clazz = (Class<? extends T>) option.getType();
+        final String[] values = getOptionValues(option);
         if (values == null) {
             return get(defaultValue);
         }
-        T[] result = (T[]) Array.newInstance(clazz, values.length);
+        final T[] result = (T[]) Array.newInstance(clazz, values.length);
         try {
             for (int i = 0; i < values.length; i++) {
                 result[i] = clazz.cast(option.getConverter().apply(values[i]));

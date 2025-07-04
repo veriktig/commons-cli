@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,7 +86,7 @@ public class TextStyleTests {
     }
 
     @Test
-    public void testDefaultStyle() {
+    void testDefaultStyle() {
         final TextStyle underTest = TextStyle.DEFAULT;
         assertEquals(TextStyle.Alignment.LEFT, underTest.getAlignment());
         assertTrue(underTest.isScalable());
@@ -97,7 +97,7 @@ public class TextStyleTests {
 
     @ParameterizedTest(name = "{index} {0}")
     @MethodSource("padTestData")
-    public void testPad(final TextStyle underTest, final String unindentedString, final String indentedString) {
+    void testPad(final TextStyle underTest, final String unindentedString, final String indentedString) {
         assertEquals(unindentedString, underTest.pad(false, "Hello world"), "Unindented string test failed");
         assertEquals(indentedString, underTest.pad(true, "Hello world"), "Indented string test failed");
     }

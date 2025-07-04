@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
  * https://issues.apache.org/jira/browse/CLI-148
  */
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class BugCLI148Test {
+class BugCLI148Test {
     private Options options;
 
     @BeforeEach
@@ -42,7 +42,7 @@ public class BugCLI148Test {
     }
 
     @Test
-    public void testWorkaround1() throws Exception {
+    void testWorkaround1() throws Exception {
         final CommandLineParser parser = new PosixParser();
         final String[] args = {"-t-something"};
 
@@ -51,7 +51,7 @@ public class BugCLI148Test {
     }
 
     @Test
-    public void testWorkaround2() throws Exception {
+    void testWorkaround2() throws Exception {
         final CommandLineParser parser = new PosixParser();
         final String[] args = {"-t", "\"-something\""};
 

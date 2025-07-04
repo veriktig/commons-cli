@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests {@link XhtmlHelpAppendable}.
  */
-public class XhtmlHelpAppendableTest {
+class XhtmlHelpAppendableTest {
 
     private StringBuilder sb;
     private XhtmlHelpAppendable underTest;
@@ -47,7 +47,7 @@ public class XhtmlHelpAppendableTest {
     }
 
     @Test
-    public void testAppendHeaderTest() throws IOException {
+    void testAppendHeaderTest() throws IOException {
         underTest.appendHeader(1, "Hello World");
         assertEquals(String.format("<h1>Hello World</h1>%n"), sb.toString());
         sb.setLength(0);
@@ -58,7 +58,7 @@ public class XhtmlHelpAppendableTest {
     }
 
     @Test
-    public void testAppendListTest() throws IOException {
+    void testAppendListTest() throws IOException {
         final String[] entries = { "one", "two", "three" };
         underTest.appendList(true, Arrays.asList(entries));
         assertEquals(String.format("<ol>%n  <li>one</li>%n  <li>two</li>%n  <li>three</li>%n</ol>%n"), sb.toString());
@@ -68,19 +68,19 @@ public class XhtmlHelpAppendableTest {
     }
 
     @Test
-    public void testAppendParagraphFormatTest() throws IOException {
+    void testAppendParagraphFormatTest() throws IOException {
         underTest.appendParagraphFormat("Hello %s World %,d", "Joe", 309);
         assertEquals(String.format("<p>Hello Joe World 309</p>%n"), sb.toString());
     }
 
     @Test
-    public void testAppendParagraphTest() throws IOException {
+    void testAppendParagraphTest() throws IOException {
         underTest.appendParagraph("Hello World");
         assertEquals(String.format("<p>Hello World</p>%n"), sb.toString());
     }
 
     @Test
-    public void testAppendTableTest() throws IOException {
+    void testAppendTableTest() throws IOException {
         final List<TextStyle> styles = Arrays.asList(TextStyle.DEFAULT, TextStyle.DEFAULT, TextStyle.DEFAULT);
         final String[] headers = { "one", "two", "three" };
         // @formatter:off
@@ -140,7 +140,7 @@ public class XhtmlHelpAppendableTest {
     }
 
     @Test
-    public void testAppendTitleTest() throws IOException {
+    void testAppendTitleTest() throws IOException {
         underTest.appendTitle("Hello World");
         assertEquals(String.format("<span class='commons_cli_title'>Hello World</span>%n"), sb.toString());
     }

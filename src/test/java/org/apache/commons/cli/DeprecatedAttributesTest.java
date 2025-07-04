@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-public class DeprecatedAttributesTest {
+class DeprecatedAttributesTest {
 
     @Test
-    public void testBuilderNonDefaults() {
+    void testBuilderNonDefaults() {
         // @formatter:off
         final DeprecatedAttributes value = DeprecatedAttributes.builder()
                 .setDescription("Use Bar instead!")
@@ -38,7 +38,7 @@ public class DeprecatedAttributesTest {
     }
 
     @Test
-    public void testBuilderNonDefaultsToString() {
+    void testBuilderNonDefaultsToString() {
         // @formatter:off
         assertEquals("Deprecated for removal since 2.0: Use Bar instead!", DeprecatedAttributes.builder()
                 .setDescription("Use Bar instead!")
@@ -61,7 +61,7 @@ public class DeprecatedAttributesTest {
     }
 
     @Test
-    public void testDefaultBuilder() {
+    void testDefaultBuilder() {
         final DeprecatedAttributes defaultValue = DeprecatedAttributes.builder().get();
         assertEquals(DeprecatedAttributes.DEFAULT.getDescription(), defaultValue.getDescription());
         assertEquals(DeprecatedAttributes.DEFAULT.getSince(), defaultValue.getSince());
@@ -69,7 +69,7 @@ public class DeprecatedAttributesTest {
     }
 
     @Test
-    public void testDefaultToString() {
+    void testDefaultToString() {
         assertEquals("Deprecated", DeprecatedAttributes.DEFAULT.toString());
     }
 }

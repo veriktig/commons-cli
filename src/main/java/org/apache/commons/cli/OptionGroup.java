@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,13 +28,6 @@ import java.util.Map;
  */
 public class OptionGroup implements Serializable {
 
-    /**
-     * Constructs a new instance.
-     */
-    public OptionGroup() {
-        // empty
-    }
-
     /** The serial version UID. */
     private static final long serialVersionUID = 1L;
 
@@ -46,6 +39,13 @@ public class OptionGroup implements Serializable {
 
     /** Specified whether this group is required */
     private boolean required;
+
+    /**
+     * Constructs a new instance.
+     */
+    public OptionGroup() {
+        // empty
+    }
 
     /**
      * Adds the given {@code Option} to this group.

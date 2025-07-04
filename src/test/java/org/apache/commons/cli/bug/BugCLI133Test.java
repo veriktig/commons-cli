@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,9 +27,9 @@ import org.apache.commons.cli.PosixParser;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class BugCLI133Test {
+class BugCLI133Test {
     @Test
-    public void testOrder() throws ParseException {
+    void testOrder() throws ParseException {
         final Option optionA = new Option("a", "first");
         final Options opts = new Options();
         opts.addOption(optionA);

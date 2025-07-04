@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,6 +19,7 @@ package org.apache.commons.cli;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.spy;
@@ -39,11 +40,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Test case for the HelpFormatter class.
  */
-public class HelpFormatterTest {
+class HelpFormatterTest {
+
     private static final String EOL = System.lineSeparator();
 
     static Stream<Arguments> deprecatedOptionsProvider() {
@@ -86,7 +89,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testAccessors() {
+    void testAccessors() {
         final HelpFormatter formatter = new HelpFormatter();
 
         formatter.setArgName("argname");
@@ -115,7 +118,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testAutomaticUsage() {
+    void testAutomaticUsage() {
         final HelpFormatter hf = new HelpFormatter();
         Options options;
         String expected = "usage: app [-a]";
@@ -137,7 +140,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testDefaultArgName() {
+    void testDefaultArgName() {
         final Option option = Option.builder("f").hasArg().required(true).build();
 
         final Options options = new Options();
@@ -152,8 +155,27 @@ public class HelpFormatterTest {
         assertEquals("usage: app -f <argument>" + EOL, out.toString());
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = { -100, -1, 0 })
+    public void testDeprecatedFindWrapPosZeroWidth(final int width) {
+        final int pos = new HelpFormatter().findWrapPos("Hello World", width, 0);
+        assertEquals(width, pos);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { -100, -1, 0 })
+    public void testDeprecatedPrintOptionsZeroWidth(final int width) {
+        final Options options = new Options();
+        options.addOption("h", "help", false, "Show help");
+        final StringWriter out = new StringWriter();
+        final PrintWriter pw = new PrintWriter(out);
+        new HelpFormatter().printOptions(pw, width, options, 1, 3);
+        final String result = out.toString();
+        assertNotNull(result);
+    }
+
     @Test
-    public void testFindWrapPos() {
+    void testFindWrapPos() {
         final HelpFormatter hf = new HelpFormatter();
 
         String text = "This is a test.";
@@ -180,7 +202,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testHeaderStartingWithLineSeparator0() {
+    void testHeaderStartingWithLineSeparator0() {
         // related to Bugzilla #21215
         final Options options = new Options();
         final HelpFormatter formatter = new HelpFormatter();
@@ -200,7 +222,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testHeaderStartingWithLineSeparator1() {
+    void testHeaderStartingWithLineSeparator1() {
         // related to Bugzilla #21215
         final Options options = new Options();
         final String header = EOL + "Header";
@@ -272,7 +294,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testHelpWithLongOptSeparator() {
+    void testHelpWithLongOptSeparator() {
         final Options options = new Options();
         options.addOption("f", true, "the file");
         options.addOption(Option.builder("s").longOpt("size").desc("the size").hasArg().argName("SIZE").build());
@@ -300,7 +322,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testIndentedHeaderAndFooter() {
+    void testIndentedHeaderAndFooter() {
         // related to CLI-207
         final Options options = new Options();
         final HelpFormatter formatter = new HelpFormatter();
@@ -321,7 +343,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testOptionWithoutShortFormat() {
+    void testOptionWithoutShortFormat() {
         // related to Bugzilla #19383 (CLI-67)
         final Options options = new Options();
         options.addOption(new Option("a", "aaa", false, "aaaaaaa"));
@@ -342,7 +364,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testOptionWithoutShortFormat2() {
+    void testOptionWithoutShortFormat2() {
         // related to Bugzilla #27635 (CLI-26)
         final Option help = new Option("h", "help", false, "print this message");
         final Option version = new Option("v", "version", false, "print version information");
@@ -413,7 +435,7 @@ public class HelpFormatterTest {
 
     @ParameterizedTest
     @MethodSource("deprecatedOptionsProvider")
-    public void testPrintDeprecatedOptions(final HelpFormatter hf, final Option option, final String expectedTxt) {
+    void testPrintDeprecatedOptions(final HelpFormatter hf, final Option option, final String expectedTxt) {
         final StringBuffer sb = new StringBuffer();
 
         final int leftPad = 1;
@@ -432,7 +454,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintHelpNewlineFooter() {
+    void testPrintHelpNewlineFooter() {
         final HelpFormatter formatter = new HelpFormatter();
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final PrintWriter pw = new PrintWriter(out);
@@ -459,7 +481,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintHelpNewlineHeader() {
+    void testPrintHelpNewlineHeader() {
         final HelpFormatter formatter = new HelpFormatter();
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         final PrintWriter pw = new PrintWriter(out);
@@ -486,7 +508,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintHelpWithEmptySyntax() {
+    void testPrintHelpWithEmptySyntax() {
         final HelpFormatter formatter = new HelpFormatter();
         assertThrows(IllegalArgumentException.class, () -> formatter.printHelp(null, new Options()), "null command line syntax should be rejected");
         assertThrows(IllegalArgumentException.class, () -> formatter.printHelp(null, new Options(), true), "null command line syntax should be rejected");
@@ -496,7 +518,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintHelpWithSince() {
+    void testPrintHelpWithSince() {
         final String [] expected = {"usage: Command syntax", "Header", "Options            Since   Description",
                 "  -n,--no-since    -          Description for n", "  -W,--with-since  1.19.0     Descripton for W", "footer"};
         final Options options = new Options()
@@ -512,7 +534,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintOptionGroupUsage() {
+    void testPrintOptionGroupUsage() {
         final OptionGroup group = new OptionGroup();
         group.addOption(Option.builder("a").build());
         group.addOption(Option.builder("b").build());
@@ -530,7 +552,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintOptions() {
+    void testPrintOptions() {
         final StringBuffer sb = new StringBuffer();
         final HelpFormatter hf = new HelpFormatter();
         final int leftPad = 1;
@@ -572,7 +594,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintOptionWithEmptyArgNameUsage() {
+    void testPrintOptionWithEmptyArgNameUsage() {
         final Option option = new Option("f", true, null);
         option.setArgName("");
         option.setRequired(true);
@@ -589,7 +611,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintRequiredOptionGroupUsage() {
+    void testPrintRequiredOptionGroupUsage() {
         final OptionGroup group = new OptionGroup();
         group.addOption(Option.builder("a").build());
         group.addOption(Option.builder("b").build());
@@ -609,7 +631,7 @@ public class HelpFormatterTest {
 
     // uses the test for CLI-131 to implement CLI-155
     @Test
-    public void testPrintSortedUsage() {
+    void testPrintSortedUsage() {
         final Options opts = new Options();
         opts.addOption(new Option("a", "first"));
         opts.addOption(new Option("b", "second"));
@@ -625,7 +647,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testPrintSortedUsageWithNullComparator() {
+    void testPrintSortedUsageWithNullComparator() {
         final Options opts = new Options();
         opts.addOption(new Option("c", "first"));
         opts.addOption(new Option("b", "second"));
@@ -643,7 +665,7 @@ public class HelpFormatterTest {
     // This test ensures the options are properly sorted
     // See https://issues.apache.org/jira/browse/CLI-131
     @Test
-    public void testPrintUsage() {
+    void testPrintUsage() {
         final Option optionA = new Option("a", "first");
         final Option optionB = new Option("b", "second");
         final Option optionC = new Option("c", "third");
@@ -660,7 +682,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderSince() throws IOException {
+    void testRenderSince() throws IOException {
         final String[] expected = {"Options            Since   Description", "  -n,--no-since    -          Description for n",
             "  -W,--with-since  1.19.0     Descripton for W"};
         final Options options = new Options()
@@ -678,7 +700,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextMultiLine() {
+    void testRenderWrappedTextMultiLine() {
         // multi line text
         final int width = 16;
         final int padding = 0;
@@ -694,7 +716,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextMultiLinePadded() {
+    void testRenderWrappedTextMultiLinePadded() {
         // multi-line padded text
         final int width = 16;
         final int padding = 4;
@@ -713,7 +735,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextSingleLine() throws IOException {
+    void testRenderWrappedTextSingleLine() throws IOException {
         // single line text
         final int width = 12;
         final int padding = 0;
@@ -731,7 +753,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextSingleLinePadded() {
+    void testRenderWrappedTextSingleLinePadded() {
         // single line padded text
         final int width = 12;
         final int padding = 4;
@@ -744,7 +766,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextSingleLinePadded2() {
+    void testRenderWrappedTextSingleLinePadded2() {
         // single line padded text 2
         final int width = 53;
         final int padding = 24;
@@ -762,7 +784,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRenderWrappedTextWordCut() {
+    void testRenderWrappedTextWordCut() {
         final int width = 7;
         final int padding = 0;
         final String text = "Thisisatest.";
@@ -774,7 +796,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testRtrim() {
+    void testRtrim() {
         final HelpFormatter formatter = new HelpFormatter();
 
         assertNull(formatter.rtrim(null));
@@ -783,7 +805,7 @@ public class HelpFormatterTest {
     }
 
     @Test
-    public void testUsageWithLongOptSeparator() {
+    void testUsageWithLongOptSeparator() {
         final Options options = new Options();
         options.addOption("f", true, "the file");
         options.addOption(Option.builder("s").longOpt("size").desc("the size").hasArg().argName("SIZE").build());

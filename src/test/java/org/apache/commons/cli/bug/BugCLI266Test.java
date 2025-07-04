@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.junit.jupiter.api.Test;
 
-public class BugCLI266Test {
+class BugCLI266Test {
 
     private final List<String> insertedOrder = Arrays.asList("h", "d", "f", "x", "s", "p", "t", "w", "o");
     private final List<String> sortOrder = Arrays.asList("d", "f", "h", "o", "p", "s", "t", "w", "x");
@@ -105,7 +105,7 @@ public class BugCLI266Test {
     }
 
     @Test
-    public void testOptionComparatorDefaultOrder() {
+    void testOptionComparatorDefaultOrder() {
         final HelpFormatter formatter = new HelpFormatter();
         final List<Option> options = new ArrayList<>(getOptions().getOptions());
         Collections.sort(options, formatter.getOptionComparator());
@@ -117,7 +117,7 @@ public class BugCLI266Test {
     }
 
     @Test
-    public void testOptionComparatorInsertedOrder() {
+    void testOptionComparatorInsertedOrder() {
         final Collection<Option> options = getOptions().getOptions();
         int i = 0;
         for (final Option o : options) {

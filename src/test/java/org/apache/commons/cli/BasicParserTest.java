@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
  * TODO Needs a rework using JUnit parameterized tests.
  */
 @SuppressWarnings("deprecation") // tests some deprecated classes
-public class BasicParserTest extends AbstractParserTestCase {
+class BasicParserTest extends AbstractParserTestCase {
     @Override
     @BeforeEach
     public void setUp() {
@@ -36,162 +36,162 @@ public class BasicParserTest extends AbstractParserTestCase {
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousLongWithoutEqualSingleDash() throws Exception {
+    void testAmbiguousLongWithoutEqualSingleDash() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousLongWithoutEqualSingleDash2() throws Exception {
+    void testAmbiguousLongWithoutEqualSingleDash2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousPartialLongOption1() throws Exception {
+    void testAmbiguousPartialLongOption1() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousPartialLongOption2() throws Exception {
+    void testAmbiguousPartialLongOption2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousPartialLongOption3() throws Exception {
+    void testAmbiguousPartialLongOption3() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testAmbiguousPartialLongOption4() throws Exception {
+    void testAmbiguousPartialLongOption4() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testBursting() throws Exception {
+    void testBursting() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testDoubleDash2() throws Exception {
+    void testDoubleDash2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testLongOptionWithEqualsQuoteHandling() throws Exception {
+    void testLongOptionWithEqualsQuoteHandling() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testLongWithEqualDoubleDash() throws Exception {
+    void testLongWithEqualDoubleDash() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testLongWithEqualSingleDash() throws Exception {
+    void testLongWithEqualSingleDash() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testLongWithoutEqualSingleDash() throws Exception {
+    void testLongWithoutEqualSingleDash() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testMissingArgWithBursting() throws Exception {
+    void testMissingArgWithBursting() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser (CLI-184)")
-    public void testNegativeOption() throws Exception {
+    void testNegativeOption() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testPartialLongOptionSingleDash() throws Exception {
+    void testPartialLongOptionSingleDash() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testPropertiesOption1() throws Exception {
+    void testPropertiesOption1() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testPropertiesOption2() throws Exception {
+    void testPropertiesOption2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testShortOptionConcatenatedQuoteHandling() throws Exception {
+    void testShortOptionConcatenatedQuoteHandling() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testShortWithEqual() throws Exception {
+    void testShortWithEqual() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testShortWithoutEqual() throws Exception {
+    void testShortWithoutEqual() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testStopBursting() throws Exception {
+    void testStopBursting() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testStopBursting2() throws Exception {
+    void testStopBursting2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testUnambiguousPartialLongOption1() throws Exception {
+    void testUnambiguousPartialLongOption1() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testUnambiguousPartialLongOption2() throws Exception {
+    void testUnambiguousPartialLongOption2() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testUnambiguousPartialLongOption3() throws Exception {
+    void testUnambiguousPartialLongOption3() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testUnambiguousPartialLongOption4() throws Exception {
+    void testUnambiguousPartialLongOption4() throws Exception {
     }
 
     @Override
     @Test
     @Disabled("not supported by the BasicParser")
-    public void testUnrecognizedOptionWithBursting() throws Exception {
+    void testUnrecognizedOptionWithBursting() throws Exception {
     }
 }

@@ -7,7 +7,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-       http://www.apache.org/licenses/LICENSE-2.0
+       https://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,15 +34,16 @@
       <action type="fix" dev="ggregory" due-to="Arnout Engelen">Get mockito version from parent pom (#351).</action>
       <action type="fix" dev="ggregory" due-to="Gary Gregory">Remove -nouses directive from maven-bundle-plugin. OSGi package imports now state 'uses' definitions for package imports, this doesn't affect JPMS (from org.apache.commons:commons-parent:80).</action>
       <action type="fix" dev="ggregory" due-to="Arnout Engelen">Deprecate PatternOptionBuilder.PatternOptionBuilder().</action>
+      <action type="fix" issue="CLI-341" dev="ggregory" due-to="Ruiqi Dong, Gary Gregory">HelpFormatter infinite loop with 0 width input.</action>
       <!-- ADD -->
       <action type="add" issue="CLI-339" dev="ggregory" due-to="Claude Warren, Gary Gregory">Help formatter extension in the new package #314.</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">CommandLine.Builder implements Supplier&lt;CommandLine&gt;.</action>
       <action type="add" dev="ggregory" due-to="Gary Gregory">DefaultParser.Builder implements Supplier&lt;DefaultParser&gt;.</action>
       <action type="add" issue="CLI-340" dev="ggregory" due-to="Claude Warren, Gary Gregory">Add CommandLine.getParsedOptionValues() #334.</action> 
       <!-- UPDATE -->
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 72 to 81 #302, #304, #310, #315, #320, #327.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">[test] Bump commons-io:commons-io from 2.16.1 to 2.18.0 #309, #337.</action>
-      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">[test] Bump org.apache.commons:commons-text from 1.12.0 to 1.13.0 #344.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 72 to 85 #302, #304, #310, #315, #320, #327, #371.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">[test] Bump commons-io:commons-io from 2.16.1 to 2.19.0 #309, #337.</action>
+      <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">[test] Bump org.apache.commons:commons-text from 1.12.0 to 1.13.1 #344.</action>
       <action type="update" dev="ggregory" due-to="Gary Gregory">Update site documentation to https://maven.apache.org/xsd/xdoc-2.0.xsd.</action>
     </release>
     <release version="1.9.0" date="2024-08-10" description="This release contains new features and bug fixes and requires Java 8 or above.">

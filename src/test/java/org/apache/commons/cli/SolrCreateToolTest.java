@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-public class SolrCreateToolTest {
+class SolrCreateToolTest {
 
     private List<Option> getOptions() {
         // @formatter:off
@@ -91,14 +91,14 @@ public class SolrCreateToolTest {
     }
 
     @Test
-    public void testHelpFormatter() {
+    void testHelpFormatter() {
         final HelpFormatter formatter = new HelpFormatter();
         final String actual = printHelp(formatter);
         assertFalse(actual.contains("Deprecated"));
     }
 
     @Test
-    public void testHelpFormatterDeprecated() {
+    void testHelpFormatterDeprecated() {
         final HelpFormatter formatter = HelpFormatter.builder().setShowDeprecated(true).get();
         final String actual = printHelp(formatter);
         assertTrue(actual.contains("-zkHost,--zkHost <HOST>          [Deprecated] Zookeeper connection"));

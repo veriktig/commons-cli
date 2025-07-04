@@ -6,7 +6,7 @@
   (the "License"); you may not use this file except in compliance with
   the License.  You may obtain a copy of the License at
 
-      http://www.apache.org/licenses/LICENSE-2.0
+      https://www.apache.org/licenses/LICENSE-2.0
 
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
@@ -82,13 +82,6 @@ public class HelpFormatter {
         // Make HelpFormatter immutable for 2.0
 
         /**
-         * Constructs a new instance.
-         */
-        public Builder() {
-            // empty
-        }
-
-        /**
          * A function to convert a description (not null) and a deprecated Option (not null) to help description
          */
         private static final Function<Option, String> DEFAULT_DEPRECATED_FORMAT = o -> "[Deprecated] " + getDescription(o);
@@ -105,6 +98,13 @@ public class HelpFormatter {
 
         /** The flag to determine if the since values should be dispalyed */
         private boolean showSince;
+
+        /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
 
         @Override
         public HelpFormatter get() {
@@ -502,6 +502,9 @@ public class HelpFormatter {
      * @throws IOException if an I/O error occurs.
      */
     <A extends Appendable> A appendWrappedText(final A appendable, final int width, final int nextLineTabStop, final String text) throws IOException {
+        if (width <= 0) {
+            return appendable;
+        }
         String render = text;
         int nextLineTabStopPos = nextLineTabStop;
         int pos = findWrapPos(render, width, 0);

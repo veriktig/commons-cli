@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ import org.apache.commons.cli.Options;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class BugCLI162Test {
+class BugCLI162Test {
     /** Constant for the line separator. */
     private static final String CR = System.lineSeparator();
 
@@ -175,7 +175,7 @@ public class BugCLI162Test {
     }
 
     @Test
-    public void testInfiniteLoop() {
+    void testInfiniteLoop() {
         final Options options = new Options();
         options.addOption("h", "help", false, "This is a looooong description");
         // used to hang & crash
@@ -194,7 +194,7 @@ public class BugCLI162Test {
     }
 
     @Test
-    public void testLongLineChunking() {
+    void testLongLineChunking() {
         final Options options = new Options();
         //@formatter:off
         options.addOption("x", "extralongarg", false,
@@ -229,7 +229,7 @@ public class BugCLI162Test {
     }
 
     @Test
-    public void testLongLineChunkingIndentIgnored() {
+    void testLongLineChunkingIndentIgnored() {
         final Options options = new Options();
         options.addOption("x", "extralongarg", false, "This description is Long.");
         formatter.printHelp(new PrintWriter(sw), 22, this.getClass().getName(), "Header", options, 0, 5, "Footer");
@@ -248,7 +248,7 @@ public class BugCLI162Test {
     }
 
     @Test
-    public void testPrintHelpLongLines() {
+    void testPrintHelpLongLines() {
         // Options build
         final Options commandLineOptions;
         commandLineOptions = new Options();
@@ -301,14 +301,14 @@ public class BugCLI162Test {
         //@formatter:on
         commandLineOptions.addOption(option);
         //
-        final OptionGroup pOutTypesOptionGroup = new OptionGroup();
-        final String pOutTypesOptionGroupDoc = OPT + OPT_PARAM_TYPES_INT + " and " + OPT + OPT_PARAM_TYPES_NAME + " are mutually exclusive.";
+        final OptionGroup outTypesOptionGroup = new OptionGroup();
+        final String outTypesOptionGroupDoc = OPT + OPT_PARAM_TYPES_INT + " and " + OPT + OPT_PARAM_TYPES_NAME + " are mutually exclusive.";
         final String typesClassName = Types.class.getName();
         //@formatter:off
         option = new Option(OPT_PARAM_TYPES_INT, "paramTypes", true, "Parameter types from "
             + typesClassName
             + ". "
-            + pOutTypesOptionGroupDoc
+            + outTypesOptionGroupDoc
             + " Example: "
             + OPT
             + OPT_PARAM_TYPES_INT
@@ -319,14 +319,14 @@ public class BugCLI162Test {
         option = new Option(OPT_PARAM_TYPES_NAME, "paramTypeNames", true, "Parameter "
             + typesClassName
             + " names. "
-            + pOutTypesOptionGroupDoc
+            + outTypesOptionGroupDoc
             + " Example: "
             + OPT
             + OPT_PARAM_TYPES_NAME
             + " \"CURSOR VARCHAR\"");
         //@formatter:on
         commandLineOptions.addOption(option);
-        commandLineOptions.addOptionGroup(pOutTypesOptionGroup);
+        commandLineOptions.addOptionGroup(outTypesOptionGroup);
         //
         final OptionGroup modesOptionGroup = new OptionGroup();
         final String modesOptionGroupDoc = OPT + OPT_PARAM_MODES_INT + " and " + OPT + OPT_PARAM_MODES_NAME + " are mutually exclusive.";
