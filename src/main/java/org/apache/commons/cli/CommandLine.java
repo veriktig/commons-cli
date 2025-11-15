@@ -270,7 +270,7 @@ public class CommandLine implements Serializable {
     /**
      * Gets the {@code Object} type of this {@code Option}.
      *
-     * @deprecated due to System.err message. Instead use getParsedOptionValue(char)
+     * @deprecated due to System.err message; use {@link #getParsedOptionValue(char)} instead.
      * @param optionChar the name of the option.
      * @return the type of opt.
      */
@@ -284,7 +284,7 @@ public class CommandLine implements Serializable {
      *
      * @param optionName the name of the option.
      * @return the type of this {@code Option}.
-     * @deprecated due to System.err message. Instead use getParsedOptionValue(String)
+     * @deprecated due to System.err message; use {@link #getParsedOptionValue(String)} instead.
      */
     @Deprecated
     public Object getOptionObject(final String optionName) {
@@ -309,11 +309,11 @@ public class CommandLine implements Serializable {
      */
     public Properties getOptionProperties(final Option option) {
         final Properties props = new Properties();
-        for (final Option processedOption : options) {
+        options.forEach(processedOption -> {
             if (processedOption.equals(option)) {
                 processPropertiesFromValues(props, processedOption.getValuesList());
             }
-        }
+        });
         return props;
     }
 
@@ -329,11 +329,11 @@ public class CommandLine implements Serializable {
      */
     public Properties getOptionProperties(final String optionName) {
         final Properties props = new Properties();
-        for (final Option option : options) {
+        options.forEach(option -> {
             if (optionName.equals(option.getOpt()) || optionName.equals(option.getLongOpt())) {
                 processPropertiesFromValues(props, option.getValuesList());
             }
-        }
+        });
         return props;
     }
 
@@ -506,14 +506,14 @@ public class CommandLine implements Serializable {
             return null;
         }
         final List<String> values = new ArrayList<>();
-        for (final Option processedOption : options) {
+        options.forEach(processedOption -> {
             if (processedOption.equals(option)) {
                 if (option.isDeprecated()) {
                     handleDeprecated(option);
                 }
                 values.addAll(processedOption.getValuesList());
             }
-        }
+        });
         return values.isEmpty() ? null : values.toArray(Util.EMPTY_STRING_ARRAY);
     }
 
@@ -1025,11 +1025,7 @@ public class CommandLine implements Serializable {
      */
     private void processPropertiesFromValues(final Properties props, final List<String> values) {
         for (int i = 0; i < values.size(); i += 2) {
-            if (i + 1 < values.size()) {
-                props.put(values.get(i), values.get(i + 1));
-            } else {
-                props.put(values.get(i), "true");
-            }
+            props.put(values.get(i), i + 1 < values.size() ? values.get(i + 1) : "true");
         }
     }
 

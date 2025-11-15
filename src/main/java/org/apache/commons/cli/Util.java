@@ -21,6 +21,8 @@
 
 package org.apache.commons.cli;
 
+import org.apache.commons.cli.help.OptionFormatter;
+
 /**
  * Contains useful helper methods for classes within this package.
  */
@@ -78,10 +80,10 @@ public final class Util {
         if (isEmpty(str)) {
             return str;
         }
-        if (str.startsWith("--")) {
+        if (str.startsWith(OptionFormatter.DEFAULT_LONG_OPT_PREFIX)) {
             return str.substring(2);
         }
-        if (str.startsWith("-")) {
+        if (str.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX)) {
             return str.substring(1);
         }
         return str;

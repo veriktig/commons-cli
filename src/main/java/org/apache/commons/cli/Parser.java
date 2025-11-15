@@ -24,10 +24,12 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Properties;
 
+import org.apache.commons.cli.help.OptionFormatter;
+
 /**
  * Creates {@link CommandLine} instances.
  *
- * @deprecated since 1.3, the two-pass parsing with the flatten method is not enough flexible to handle complex cases
+ * @deprecated Since 1.3, the two-pass parsing with the flatten method is not enough flexible to handle complex cases.
  */
 @Deprecated
 public abstract class Parser implements CommandLineParser {
@@ -148,9 +150,7 @@ public abstract class Parser implements CommandLineParser {
     public CommandLine parse(final Options options, final String[] arguments, final Properties properties, final boolean stopAtNonOption)
             throws ParseException {
         // clear out the data in options in case it's been used before (CLI-71)
-        for (final Option opt : options.helpOptions()) {
-            opt.clearValues();
-        }
+        options.helpOptions().forEach(Option::clearValues);
         // clear the data from the groups
         for (final OptionGroup optionGroup : options.getOptionGroups()) {
             optionGroup.setSelected(null);
@@ -159,23 +159,23 @@ public abstract class Parser implements CommandLineParser {
         setOptions(options);
         cmd = CommandLine.builder().get();
         boolean eatTheRest = false;
-        final List<String> tokenList = Arrays.asList(flatten(getOptions(), arguments == null ? new String[0] : arguments, stopAtNonOption));
+        final List<String> tokenList = Arrays.asList(flatten(getOptions(), arguments == null ? Util.EMPTY_STRING_ARRAY : arguments, stopAtNonOption));
         final ListIterator<String> iterator = tokenList.listIterator();
         // process each flattened token
         while (iterator.hasNext()) {
             final String token = iterator.next();
             if (token != null) {
                 // the value is the double-dash
-                if ("--".equals(token)) {
+                if (OptionFormatter.DEFAULT_LONG_OPT_PREFIX.equals(token)) {
                     eatTheRest = true;
-                } else if ("-".equals(token)) {
+                } else if (OptionFormatter.DEFAULT_OPT_PREFIX.equals(token)) {
                     // the value is a single dash
                     if (stopAtNonOption) {
                         eatTheRest = true;
                     } else {
                         cmd.addArg(token);
                     }
-                } else if (token.startsWith("-")) {
+                } else if (token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX)) {
                     // the value is an option
                     if (stopAtNonOption && !getOptions().hasOption(token)) {
                         eatTheRest = true;
@@ -192,13 +192,12 @@ public abstract class Parser implements CommandLineParser {
                 }
                 // eat the remaining tokens
                 if (eatTheRest) {
-                    while (iterator.hasNext()) {
-                        final String str = iterator.next();
+                    iterator.forEachRemaining(str -> {
                         // ensure only one double-dash is added
-                        if (!"--".equals(str)) {
+                        if (!OptionFormatter.DEFAULT_LONG_OPT_PREFIX.equals(str)) {
                             cmd.addArg(str);
                         }
-                    }
+                    });
                 }
             }
         }
@@ -220,7 +219,7 @@ public abstract class Parser implements CommandLineParser {
         while (iter.hasNext()) {
             final String str = iter.next();
             // found an Option, not an argument
-            if (getOptions().hasOption(str) && str.startsWith("-")) {
+            if (getOptions().hasOption(str) && str.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX)) {
                 iter.previous();
                 break;
             }
@@ -232,7 +231,7 @@ public abstract class Parser implements CommandLineParser {
                 break;
             }
         }
-        if (opt.getValues() == null && !opt.hasOptionalArg()) {
+        if (opt.isValuesEmpty() && !opt.hasOptionalArg()) {
             throw new MissingArgumentException(opt);
         }
     }
@@ -286,7 +285,7 @@ public abstract class Parser implements CommandLineParser {
                 // get the value from the properties instance
                 final String value = properties.getProperty(option);
                 if (opt.hasArg()) {
-                    if (Util.isEmpty(opt.getValues())) {
+                    if (opt.isValuesEmpty()) {
                         try {
                             opt.processValue(value);
                         } catch (final RuntimeException exp) { // NOPMD
@@ -317,7 +316,7 @@ public abstract class Parser implements CommandLineParser {
     /**
      * Removes the option or its group from the list of expected elements.
      *
-     * @param opt
+     * @param opt the option.
      */
     private void updateRequiredOptions(final Option opt) throws ParseException {
         // if the option is a required option remove the option from

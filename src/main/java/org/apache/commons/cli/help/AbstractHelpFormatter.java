@@ -284,7 +284,7 @@ public abstract class AbstractHelpFormatter {
     protected abstract TableDefinition getTableDefinition(Iterable<Option> options);
 
     /**
-     * Prints the help for a collection of {@link Option}s with the specified command line syntax.
+     * Prints the help for {@link Options} with the specified command line syntax.
      *
      * @param cmdLineSyntax the syntax for this application.
      * @param header        the banner to display at the beginning of the help.
@@ -294,6 +294,23 @@ public abstract class AbstractHelpFormatter {
      * @throws IOException If the output could not be written to the {@link HelpAppendable}.
      */
     public void printHelp(final String cmdLineSyntax, final String header, final Iterable<Option> options, final String footer, final boolean autoUsage)
+            throws IOException {
+        Options optionsObject = new Options();
+        options.forEach(optionsObject::addOption);
+        printHelp(cmdLineSyntax, header, optionsObject, footer, autoUsage);
+    }
+
+    /**
+     * Prints the help for a collection of {@link Option}s with the specified command line syntax.
+     *
+     * @param cmdLineSyntax the syntax for this application.
+     * @param header        the banner to display at the beginning of the help.
+     * @param options       the collection of {@link Option} objects to print.
+     * @param footer        the banner to display at the end of the help.
+     * @param autoUsage     whether to print an automatically generated usage statement.
+     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
+     */
+    public void printHelp(final String cmdLineSyntax, final String header, final Options options, final String footer, final boolean autoUsage)
             throws IOException {
         if (Util.isEmpty(cmdLineSyntax)) {
             throw new IllegalArgumentException("cmdLineSyntax not provided");
@@ -306,25 +323,10 @@ public abstract class AbstractHelpFormatter {
         if (!Util.isEmpty(header)) {
             helpAppendable.appendParagraph(header);
         }
-        helpAppendable.appendTable(getTableDefinition(options));
+        helpAppendable.appendTable(getTableDefinition(options.getOptions()));
         if (!Util.isEmpty(footer)) {
             helpAppendable.appendParagraph(footer);
         }
-    }
-
-    /**
-     * Prints the help for {@link Options} with the specified command line syntax.
-     *
-     * @param cmdLineSyntax the syntax for this application.
-     * @param header        the banner to display at the beginning of the help.
-     * @param options       the {@link Options} to print.
-     * @param footer        the banner to display at the end of the help.
-     * @param autoUsage     whether to print an automatically generated usage statement.
-     * @throws IOException If the output could not be written to the {@link HelpAppendable}.
-     */
-    public final void printHelp(final String cmdLineSyntax, final String header, final Options options, final String footer, final boolean autoUsage)
-            throws IOException {
-        printHelp(cmdLineSyntax, header, options.getOptions(), footer, autoUsage);
     }
 
     /**
@@ -403,7 +405,11 @@ public abstract class AbstractHelpFormatter {
 
     /**
      * Return the string representation of the options as used in the syntax display.
-     *
+     * <p>
+     *     This is probably not the method you want.  This method does not track the presence
+     *     of option groups.  To display the option grouping use {@link #toSyntaxOptions(Options)} or
+     *     {@link #toSyntaxOptions(OptionGroup)} for individual groups.
+     * </p>
      * @param options The collection of {@link Option} instances to create the string representation for.
      * @return the string representation of the options as used in the syntax display.
      */
@@ -466,7 +472,6 @@ public abstract class AbstractHelpFormatter {
             formatter = optionFormatBuilder.build(iter.next());
             // whether the option is required or not is handled at group level
             buff.append(formatter.toSyntaxOption(true));
-
             if (iter.hasNext()) {
                 buff.append(optionGroupSeparator);
             }

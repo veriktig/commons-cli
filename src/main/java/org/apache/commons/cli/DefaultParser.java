@@ -25,6 +25,8 @@ import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.apache.commons.cli.help.OptionFormatter;
+
 /**
  * Default parser.
  *
@@ -100,16 +102,12 @@ public class DefaultParser implements CommandLineParser {
          * By "partial matching" we mean that given the following code:
          * </p>
          *
-         * <pre>
-         *
-         * {
-         *     &#64;code
-         *     final Options options = new Options();
-         *     options.addOption(new Option("d", "debug", false, "Turn on debug."));
-         *     options.addOption(new Option("e", "extract", false, "Turn on extract."));
-         *     options.addOption(new Option("o", "option", true, "Turn on option with argument."));
-         * }
-         * </pre>
+         * <pre>{@code
+         * final Options options = new Options();
+         * options.addOption(new Option("d", "debug", false, "Turn on debug."));
+         * options.addOption(new Option("e", "extract", false, "Turn on extract."));
+         * options.addOption(new Option("o", "option", true, "Turn on option with argument."));
+         * }</pre>
          * <p>
          * If "partial matching" is turned on, {@code -de} only matches the {@code "debug"} option. However, with "partial matching" disabled, {@code -de} would
          * enable both {@code debug} as well as {@code extract}
@@ -256,13 +254,11 @@ public class DefaultParser implements CommandLineParser {
      * By "partial matching" we mean that given the following code:
      * </p>
      *
-     * <pre>
-     * {
-     *     &#64;code
-     *     final Options options = new Options();
-     *     options.addOption(new Option("d", "debug", false, "Turn on debug."));
-     *     options.addOption(new Option("e", "extract", false, "Turn on extract."));
-     *     options.addOption(new Option("o", "option", true, "Turn on option with argument."));
+     * <pre>{@code
+     * final Options options = new Options();
+     * options.addOption(new Option("d", "debug", false, "Turn on debug."));
+     * options.addOption(new Option("e", "extract", false, "Turn on extract."));
+     * options.addOption(new Option("o", "option", true, "Turn on option with argument."));
      * }
      * </pre>
      *
@@ -281,9 +277,7 @@ public class DefaultParser implements CommandLineParser {
      * <p>
      * By "partial matching" we mean that given the following code:
      * </p>
-     * <pre>
-     * {
-     *     &#64;code
+     * <pre>{@code
      *     final Options options = new Options();
      *     options.addOption(new Option("d", "debug", false, "Turn on debug."));
      *     options.addOption(new Option("e", "extract", false, "Turn on extract."));
@@ -522,7 +516,7 @@ public class DefaultParser implements CommandLineParser {
                 final String value = properties.getProperty(option);
 
                 if (opt.hasArg()) {
-                    if (Util.isEmpty(opt.getValues())) {
+                    if (opt.isValuesEmpty()) {
                         opt.processValue(stripLeadingAndTrailingQuotesDefaultOff(value));
                     }
                 } else if (!("yes".equalsIgnoreCase(value) || "true".equalsIgnoreCase(value) || "1".equalsIgnoreCase(value))) {
@@ -619,13 +613,13 @@ public class DefaultParser implements CommandLineParser {
             currentToken = token;
             if (skipParsing) {
                 addArg(token);
-            } else if ("--".equals(token)) {
+            } else if (OptionFormatter.DEFAULT_LONG_OPT_PREFIX.equals(token)) {
                 skipParsing = true;
             } else if (currentOption != null && currentOption.acceptsArg() && isArgument(token)) {
                 currentOption.processValue(stripLeadingAndTrailingQuotesDefaultOn(token));
-            } else if (token.startsWith("--")) {
+            } else if (token.startsWith(OptionFormatter.DEFAULT_LONG_OPT_PREFIX)) {
                 handleLongOption(token);
-            } else if (token.startsWith("-") && !"-".equals(token)) {
+            } else if (token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX) && !OptionFormatter.DEFAULT_OPT_PREFIX.equals(token)) {
                 handleShortAndLongOption(token);
             } else {
                 handleUnknownToken(token);
@@ -646,10 +640,11 @@ public class DefaultParser implements CommandLineParser {
      * @since 1.10.0
      */
     protected void handleUnknownToken(final String token) throws ParseException {
-        if (token.startsWith("-") && token.length() > 1 && nonOptionAction == NonOptionAction.THROW) {
+        if (token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX) && token.length() > 1 && nonOptionAction == NonOptionAction.THROW) {
             throw new UnrecognizedOptionException("Unrecognized option: " + token, token);
         }
-        if (!token.startsWith("-") || token.equals("-") || token.length() > 1 && nonOptionAction != NonOptionAction.IGNORE) {
+        if (!token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX) || token.equals(OptionFormatter.DEFAULT_OPT_PREFIX)
+                || token.length() > 1 && nonOptionAction != NonOptionAction.IGNORE) {
             addArg(token);
         }
         if (nonOptionAction == NonOptionAction.STOP) {
@@ -681,7 +676,7 @@ public class DefaultParser implements CommandLineParser {
      * @param token
      */
     private boolean isLongOption(final String token) {
-        if (token == null || !token.startsWith("-") || token.length() == 1) {
+        if (token == null || !token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX) || token.length() == 1) {
             return false;
         }
         final int pos = indexOfEqual(token);
@@ -690,7 +685,7 @@ public class DefaultParser implements CommandLineParser {
             // long or partial long options (--L, -L, --L=V, -L=V, --l, --l=V)
             return true;
         }
-        if (getLongPrefix(token) != null && !token.startsWith("--")) {
+        if (getLongPrefix(token) != null && !token.startsWith(OptionFormatter.DEFAULT_LONG_OPT_PREFIX)) {
             // -LV
             return true;
         }
@@ -727,7 +722,7 @@ public class DefaultParser implements CommandLineParser {
      */
     private boolean isShortOption(final String token) {
         // short options (-S, -SV, -S=V, -SV1=V2, -S1S2)
-        if (token == null || !token.startsWith("-") || token.length() == 1) {
+        if (token == null || !token.startsWith(OptionFormatter.DEFAULT_OPT_PREFIX) || token.length() == 1) {
             return false;
         }
         // remove leading "-" and "=value"
